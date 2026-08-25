@@ -1,0 +1,85 @@
+{% extends "diagnosis/base.html" %}
+{% load static %}
+
+{% block title %}Преміум версія{% endblock %}
+
+{% block extra_css %}
+<style>
+    .premium-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 100px);
+        text-align: center;
+        padding: 20px;
+        color: #1a1a1a;
+        font-family: 'JetBrains Mono', 'Courier New', Courier, monospace;
+    }
+
+    .crown-icon {
+        width: 100px;
+        height: auto;
+        margin-bottom: 20px;
+        stroke: #1a1a1a;
+        stroke-width: 1.5;
+        fill: none;
+    }
+
+    .divider-line {
+        width: 60px;
+        height: 1px;
+        background-color: #1a1a1a;
+        margin-bottom: 40px;
+    }
+
+    .premium-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        max-width: 500px;
+        margin-bottom: 50px;
+        font-weight: 500;
+    }
+
+    /* Список переваг */
+    .premium-list {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+    }
+    
+    .premium-list li {
+        margin-bottom: 10px;
+        position: relative;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="premium-container fade-in">
+    
+    <svg class="crown-icon" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10,70 L10,30 L30,50 L50,10 L70,50 L90,30 L90,70 Z" stroke-linejoin="round" stroke-linecap="round"/>
+        <line x1="10" y1="75" x2="90" y2="75" stroke-linecap="round"/>
+    </svg>
+
+    <div class="divider-line"></div>
+
+    <div class="premium-text">
+        Перехід на преміум версію включає:
+        
+        <ul class="premium-list">
+            <li>• доступ до необмеженої кількості використань програми;</li>
+            <li>• доступ до історії.</li>
+        </ul>
+    </div>
+
+    <button class="btn">
+        Перейти на преміум
+    </button>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,224 @@
+{% extends "diagnosis/base.html" %}
+{% load static %}
+
+{% block title %}Історія діагностики{% endblock %}
+
+{% block extra_css %}
+<style>
+    .history-container {
+        max-width: 1200px;
+        width: 100%;
+        margin: 40px auto;
+        padding: 0 20px;
+        display: flex;
+        gap: 40px;
+        align-items: flex-start;
+        min-height: 500px;
+    }
+
+    /* Колонки */
+    .history-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        justify-content: flex-start;
+    }
+
+    .column-header {
+        font-size: 2.5rem;
+        color: #1a1a1a;
+        text-align: center;
+        line-height: 0.9;
+        border-bottom: 2px solid rgba(0,0,0,0.1);
+        padding-bottom: 15px;
+        margin-bottom: 10px;
+
+        min-height: 90px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    .history-card {
+        background: rgba(255, 255, 255, 0.5);
+        border: 1px solid rgba(0,0,0,0.1);
+        border-radius: 12px;
+        padding: 15px 20px;
+        margin-bottom: 0;
+        width: 100%;
+        height: 6rem;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 15px;
+
+        transition: transform 0.2s, box-shadow 0.2s;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    .history-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        background: rgba(255, 255, 255, 0.7);
+    }
+
+    .card-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+        text-align: left;
+    }
+
+    .card-title {
+        font-weight: bold;
+        font-size: 1.1rem;
+        color: #222;
+        margin-bottom: 4px;
+    }
+
+    .card-details {
+        font-size: 0.85rem;
+        color: #555;
+    }
+
+    .card-meta {
+        text-align: right;
+        min-width: 80px;
+    }
+
+    .card-date {
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: #1a1a1a;
+    }
+
+    .card-time {
+        font-size: 0.8rem;
+        color: #888;
+        margin-top: 2px;
+    }
+
+    /* Стилі результатів */
+    .result-text-danger { color: #7c3c3c; font-weight: bold; }
+    .result-text-safe { color: #2e7d32; font-weight: bold; }
+
+    /* Елементи візуалізації (кружечки) */
+    .psi-score-circle {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 1.2rem;
+        color: #fff;
+        flex-shrink: 0;
+    }
+    .score-low { background-color: #2e7d32; }
+    .score-med { background-color: #f57c00; }
+    .score-high { background-color: #c62828; }
+
+    .xray-thumb {
+        width: 50px;
+        height: 50px;
+        border-radius: 8px;
+        object-fit: cover;
+        border: 1px solid #ccc;
+        flex-shrink: 0;
+    }
+
+    /* Порожній стан - вирівнюємо красиво */
+    .empty-state {
+        text-align: center;
+        padding: 1.8rem 20px;
+        color: #666;
+        font-family: 'JetBrains Mono', monospace;
+        border: 2px dashed rgba(0,0,0,0.1);
+        border-radius: 12px;
+        background-color: rgba(255,255,255,0.1);
+        margin-top: 0;
+    }
+
+    /* Адаптивність */
+    @media (max-width: 768px) {
+        .history-container {
+            flex-direction: column;
+            align-items: stretch; /* На мобільному розтягуємо на всю ширину */
+        }
+        .column-header {
+            min-height: auto; /* На мобільному висота може бути автоматичною */
+            padding-bottom: 10px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="history-container">
+    <div class="history-column">
+    <h2 class="column-header">Клінічні дані</h2>
+
+    {% if clinical_records %}
+        {% for record in clinical_records %}
+            <div class="history-card">
+                <div class="psi-score-circle {% if record.psi_score <= 70 %}score-low{% elif record.psi_score <= 90 %}score-med{% else %}score-high{% endif %}">
+                    {{ record.psi_score }}
+                </div>
+
+                <div class="card-info">
+                    <div class="card-title">Клас ризику: {{ record.risk_class }}</div>
+                    <div class="card-details">{{ record.mortality_prediction }}</div>
+                </div>
+
+                <div class="card-meta">
+                    <div class="card-date">{{ record.created_at|date:"d.m.Y" }}</div>
+                    <div class="card-time">{{ record.created_at|date:"H:i" }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">Немає записів.</div>
+    {% endif %}
+</div>
+
+<div class="history-column">
+    <h2 class="column-header">Рентген</h2>
+
+    {% if xray_records %}
+        {% for xray in xray_records %}
+            <div class="history-card">
+                {% if xray.image %}
+                    <img src="{{ xray.image.url }}" alt="X-ray" class="xray-thumb">
+                {% else %}
+                    <div class="xray-thumb" style="display:flex;align-items:center;justify-content:center;color:#fff;">?</div>
+                {% endif %}
+
+                <div class="card-info">
+                    <div class="card-title">
+                        {% if xray.result == "pneumonia" %}
+                            <span class="result-text-danger">Пневмонія</span>
+                        {% else %}
+                            <span class="result-text-safe">Норма</span>
+                        {% endif %}
+                    </div>
+                    <div class="card-details">Впевненість: <br>{{ xray.confidence }}%</div>
+                </div>
+
+                <div class="card-meta">
+                    <div class="card-date">{{ xray.uploaded_at|date:"d.m.Y" }}</div>
+                    <div class="card-time">{{ xray.uploaded_at|date:"H:i" }}</div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">Немає знімків.</div>
+    {% endif %}
+    </div>
+</div>
+
+{% endblock %}

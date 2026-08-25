@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pneumonia Predictor{% endblock %}</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jomhuria&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'diagnosis/css/style.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <div id="overlay" class="overlay" onclick="closeNav()"></div>
+
+    <div id="mySidebar" class="sidebar">
+        <div class="sidebar-menu">
+            <a href="{% url "diagnosis:info" %}">
+                <i class="fas fa-info-circle"></i> Інформація
+            </a>
+
+            <a href="{% url "diagnosis:history" %}">
+                <i class="fas fa-history"></i> Історія
+            </a>
+
+            <a href="{% url "accounts:premium" %}">
+                <i class="fas fa-dollar-sign"></i> Преміум
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            Pneumonia Predictor © 2025
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <div class="hamburger" onclick="openNav()">
+                <i class="fas fa-bars"></i>
+            </div>
+            <div class="logo">Pneumonia Predictor</div>
+        </div>
+        <div class="nav-right">
+            <a href="{% url 'diagnosis:xray_data' %}" class="nav-icon"><i class="fas fa-x-ray"></i></a>
+            <a href="{% url 'home' %}" class="nav-icon"><i class="fas fa-home"></i></a>
+            <a href="{% url 'accounts:profile' %}" class="nav-icon"><i class="far fa-user-circle"></i></a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        {% if messages %}
+            {% for message in messages %}
+                <div style="background: rgba(255,255,255,0.3); padding: 10px; margin-bottom: 20px; border-radius: 5px;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <script>
+        function openNav() {
+            document.getElementById("mySidebar").classList.add("open");
+            document.getElementById("overlay").classList.add("active");
+            document.body.style.overflow = "hidden";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").classList.remove("open");
+            document.getElementById("overlay").classList.remove("active");
+            document.body.style.overflow = "auto";
+        }
+    </script>
+
+    <script src="{% static 'diagnosis/js/script.js' %}"></script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

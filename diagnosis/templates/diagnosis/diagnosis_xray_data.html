@@ -1,0 +1,47 @@
+{% extends 'diagnosis/base.html' %}
+
+{% block title %}Результати аналізу рентгену{% endblock %}
+
+{% block extra_css %}
+<style>
+        .result-box {
+            border: 2px solid rgba(0,0,0,0.1);
+            padding: 20px;
+            border-radius: 10px;
+            background-color: rgba(255,255,255,0.2);
+            width: 100%;
+        }
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            max-height: 400px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-top: 1rem;
+        }
+        .diagnosis-normal { color: #2e7d32; font-weight: bold; font-size: 2rem; margin: 10px 0; }
+        .diagnosis-danger { color: #5C3838; font-weight: bold; font-size: 2rem; margin: 10px 0; }
+        .confidence { font-size: 1.2rem; opacity: 0.8; }
+    </style>
+{% endblock %}
+
+{% block content %}
+<h1 >Результат ШІ діагностики</h1>
+    <div class="result-box">
+        <div class="image-container">
+            <img src="{{ scan_result.image.url }}" alt="Рентгенівський знімок">
+        </div>
+
+        <hr style="margin: 30px 0; border: 0; border-top: 1px solid rgba(0,0,0,0.1);">
+
+        <p>Вердикт системи:</p>
+
+        {% if scan_result.result == "normal" %}
+            <div class="diagnosis-normal">Здоровий</div>
+        {% else %}
+            <div class="diagnosis-danger">Пневмонія</div>
+        {% endif %}
+
+        <p class="confidence">Впевненість моделі: {{ scan_result.confidence|floatformat:2 }}%</p>
+    </div>
+{% endblock %}

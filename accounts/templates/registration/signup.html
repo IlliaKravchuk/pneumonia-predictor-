@@ -1,0 +1,69 @@
+{% extends "diagnosis/base.html" %}
+{% load static %}
+
+{% block title %}Pneudictor{% endblock %}
+
+{% block extra_css %}
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+    }
+
+    .nav-right, .hamburger {
+        display: none !important;
+    }
+
+    .main-content {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+    }
+
+    input {
+        outline: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+</div> <div class="auth-container" style="margin-top: -20px; width: 100vw; max-width: 100%;">
+
+    <div class="auth-left">
+        <h2 class="auth-title">Почніть вже зараз</h2>
+
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div style="margin-bottom: 15px;">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div style="color: red; font-size: 0.8rem; margin-top: 5px;">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="auth-btn">Зареєструватися</button>
+        </form>
+
+        <div class="auth-footer">
+            Вже маєте обліковий запис? <a href="{% url 'login' %}" class="auth-link">Увійти</a>
+        </div>
+    </div>
+
+    <div class="auth-right"></div>
+</div>
+<div style="display:none">
+{% endblock %}

@@ -1,0 +1,124 @@
+{% extends 'diagnosis/base.html' %}
+
+{% block title %}Аналіз клінічних даних{% endblock %}
+
+{% block extra_css %}
+<style>
+    select {
+        background-color: var(--bg-color);
+        border: solid #988A79 1px;
+        border-radius: 0.5rem;
+        width: 10rem;
+        color: #5E554A;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.2rem;
+        padding: 0px 0px 0px 6px;
+        height: 2rem;
+    }
+
+    input[type=number] {
+        background-color: #FAF3EC;
+        border: solid #988A79 1px;
+        border-radius: 0.5rem;
+        width: 12rem;
+        color: #5E554A;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 1.2rem;
+        padding: 0px 0px 0px 8px;
+        line-height: 2rem;
+        outline: none;
+    }
+
+    input[type="number"]:focus {
+        background-color: #fff;
+        border-color: #8c7b6c;
+        box-shadow: 0 0 0 3px rgba(140, 123, 108, 0.1);
+    }
+
+    input[type="checkbox"] {
+        -webkit-appearance: none;
+        appearance: none;
+
+        background-color: transparent;
+        margin: 0;
+
+        border: 0.13rem solid #8c7b6c;
+        border-radius: 4px;
+
+        width: 1.4rem;
+        height: 1.4rem;
+
+        display: grid;
+        place-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    input[type="checkbox"]:hover {
+        background-color: rgba(140, 123, 108, 0.1);
+    }
+
+    input[type="checkbox"]:checked {
+        background-color: #5E554A;
+        border-color: #5E554A;
+    }
+
+    input[type="checkbox"]::before {
+        content: "";
+        width: 0.8rem;
+        height: 0.8rem;
+        box-shadow: inset 1rem 1rem white;
+        transform: scale(0);
+        transform-origin: center;
+        clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+        transition: 120ms transform ease-in-out;
+    }
+
+    input[type="checkbox"]:checked::before {
+        transform: scale(1);
+    }
+
+    label {
+        color: #1E1E1E;
+        font-size: 1.4rem;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-row {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .form-label{
+       margin-right: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+
+        {% for field in form %}
+        <div class="form-row">
+            <div class="form-label">{{ field.label_tag }}</div>
+            <div class="form-field">
+                {{ field }}
+                {% if field.errors %}
+                    <div class="error-message" style="color: #d9534f; font-size: 12px; margin-top: 5px;">
+                        {{ field.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+
+        <button type="submit" class="btn">Аналізувати</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'diagnosis/base.html' %}
+
+{% block title %}Аналіз рентгену{% endblock %}
+
+{% block extra_css %}
+        <style>
+            .main-content {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                padding: 20px;
+                max-width: 800px;
+                margin: 0 auto;
+            }
+
+            .big-icon {
+                font-size: 9rem;
+                font-weight: bold;
+                margin-bottom: 20px;
+                opacity: 0.8;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 20px;
+                font-weight: normal;
+                letter-spacing: 1px;
+            }
+
+            .description {
+                font-size: 0.9rem;
+                line-height: 1.6;
+                margin-bottom: 10px;
+                max-width: 650px;
+            }
+
+            .disclaimer {
+                font-size: 0.9rem;
+                font-style: italic;
+                margin-bottom: 40px;
+                opacity: 0.8;
+            }
+
+            .hidden-input {
+                display: none;
+            }
+        </style>
+{% endblock %}
+{% block content %}
+<div class="big-icon">?</div>
+
+<h1>Немає завантаженого знімку...</h1>
+
+<p class="description">
+    Звідки береться результат? Ми використовуємо технологію комп'ютерного зору.
+    Система сканує завантажений вами рентгенівський знімок піксель за пікселем,
+    шукаючи специфічні ознаки запалення легень (затемнення, зміни легеневого малюнка).
+    Додатково аналізуються ваші симптоми, щоб виключити помилку.
+    <br>
+    Інструкція: Будь ласка, завантажте якісний скан рентгену грудної клітини.
+</p>
+
+<p class="disclaimer">
+    Пам'ятайте: остаточний діагноз встановлює лікар.
+</p>
+
+<form method="post" enctype="multipart/form-data" id="upload-form">
+    {% csrf_token %}
+
+    <input type="file" name="image" id="id_image" class="hidden-input" accept="image/*" onchange="submitForm()">
+
+    <label for="id_image" class="btn">
+        Завантажити знімок
+    </label>
+
+    {% if form.image.errors %}
+        <div class="error-message" style="color: #d9534f; font-weight: bold; margin-top: 15px; text-align: center;">
+            Увага: дозволено завантажувати лише зображення у форматах JPG, JPEG або PNG.
+            <br>
+            <span style="font-size: 12px; font-weight: normal;">(Деталі: {{ form.image.errors|striptags }})</span>
+        </div>
+    {% endif %}
+</form>
+{% endblock %}
+

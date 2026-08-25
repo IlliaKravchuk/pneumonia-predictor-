@@ -1,0 +1,93 @@
+{% extends "diagnosis/base.html" %}
+{% load static %}
+
+{% block title %}Обліковий запис{% endblock %}
+
+{% block extra_css %}
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        font-family: 'JetBrains Mono', monospace;
+        color: var(--text-color);
+    }
+
+    .main-content {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        min-height: 0;
+    }
+
+    .btn-danger {
+        background-color: #691b1b;
+        color: #fff;
+        padding: 12px 40px;
+        border-radius: 1rem;
+        font-size: 1.1rem;
+        border: none;
+        cursor: pointer;
+        display: block;
+        width: 100%;
+        text-align: center;
+        transition: background 0.2s;
+    }
+    .btn-danger:hover { background-color: #8a2424; }
+
+    input {
+        outline: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+
+    <div class="auth-left">
+        <h2 class="auth-title">Обліковий запис</h2>
+
+        <form method="post" class="auth-form">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div class="field-wrapper">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div style="color: #c62828; font-size: 0.8rem;">
+                            {{ field.errors|striptags }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+{#            <div class="field-wrapper">#}
+{#                <label>Пароль</label>#}
+{#                <input type="password" value="********" readonly onclick="window.location.href='{% url 'password_change' %}'" style="cursor: pointer;" title="Натисніть, щоб змінити пароль">#}
+{#            </div>#}
+
+            <div class="btn-group">
+                <button type="submit" class="auth-btn">Зберегти</button>
+
+            </div>
+        </form>
+
+        <div class="btn-group" style="margin-top: 15px;">
+            <form action="{% url 'logout' %}" method="post" style="width: 100%;">
+                {% csrf_token %}
+                <button type="submit" class="btn-danger">Вийти</button>
+            </form>
+        </div>
+
+    </div>
+
+    <div class="auth-right"></div>
+
+</div>
+{% endblock %}
